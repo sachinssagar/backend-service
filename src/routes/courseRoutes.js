@@ -6,7 +6,7 @@ const router = express.Router();
 // Get all courses
 router.get("/", async (req, res) => {
   try {
-    const course = await Course.find();
+    const course = await Course.find({}, { _id: 0 });
 
     return res.status(200).json(course);
   } catch (error) {
@@ -18,10 +18,11 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    if (!req.body.name) {
+    if (!req.body.id || !req.body.name) {
       return res.status(400).json({ message: "Required data missing" });
     }
     const newCourse = {
+      id: req.body.id,
       name: req.body.name,
     };
 
@@ -51,7 +52,7 @@ router.get("/:id", async (req, res) => {
 // Update the course
 router.put("/:id", async (req, res) => {
   try {
-    if (!req.body.name) {
+    if (!req.body.id || !req.body.name) {
       return res.status(400).json({ message: "Required data missing" });
     }
 
@@ -61,6 +62,7 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "Couserse not found" });
     }
 
+    course.id = req.body.id;
     course.name = req.body.name;
 
     await course.save();
