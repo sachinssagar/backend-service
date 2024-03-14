@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import courseRoutes from "./routes/courseRoutes.js";
+import morgan from "morgan";
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ mongoose
   .catch((error) => {
     console.log(error);
   });
+
+app.use(morgan("dev"));
 
 app
   .listen(PORT, () => {
